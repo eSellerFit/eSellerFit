@@ -124,10 +124,12 @@
     </div>
   </div>
 
-  <button type="submit" id="submitBtn" disabled id="submitBtn">Continue to Payment</button>
+  <button type="submit" id="submitBtn" disabled>Continue to Payment</button>
 </form>
 
 <script>
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw60CCm8MGtWVcOUCDXj5lwBBwyGP_I4923LNQuqCpJecvGzb6PLjehk_asG0CxTHC5/exec';
+
 // Get client IP and browser info
 async function getClientInfo() {
   const userAgent = navigator.userAgent;
@@ -186,31 +188,59 @@ document.getElementById('bookingForm').addEventListener('submit', async (e) => {
   const productValue = selectedProduct.value;
   const productPrice = selectedProduct.closest('.product-box').dataset.price;
 
+  const now = new Date().toISOString();
+
   const consentData = {
-    fullName: document.getElementById('fullName').value,
-    email: document.getElementById('email').value,
+    fullName: document.getElementById('fullName').value.trim(),
+    email: document.getElementById('email').value.trim(),
     product: productValue,
     price: productPrice,
     service: `Entry Strategy $${productPrice}`,
     agreementAgreed: document.getElementById('agreementConsent').checked,
-    agreementTimestamp: new Date().toISOString(),
+    agreementTimestamp: now,
     refundAgreed: document.getElementById('refundConsent').checked,
-    refundTimestamp: new Date().toISOString(),
+    refundTimestamp: now,
     ipAddress: clientInfo.ip,
     userAgent: clientInfo.userAgent,
     platform: clientInfo.platform,
-    consentTimestamp: new Date().toISOString(),
+    consentTimestamp: now,
     allConsentsObtained: true
   };
 
   // Save to localStorage
   localStorage.setItem('esellerfit_paid_booking_consent', JSON.stringify(consentData));
 
-  // TODO: Send to Google Sheet via Apps Script
-  // const response = await fetch(YOUR_APPS_SCRIPT_URL, {
-  //   method: 'POST',
-  //   body: JSON.stringify(consentData)
-  // });
+  // Send to Google Sheet via Apps Script
+  try {
+    const payload = {
+      source: 'paid',
+      fullName: consentData.fullName,
+      email: consentData.email,
+      product: consentData.product,
+      consents: {
+        clientAgreement: consentData.agreementAgreed,
+        refundPolicy: consentData.refundAgreed,
+        clientAgreementTimestamp: consentData.agreementTimestamp,
+        refundPolicyTimestamp: consentData.refundTimestamp
+      },
+      tracking: {
+        ip: consentData.ipAddress,
+        userAgent: consentData.userAgent,
+        platform: consentData.platform,
+        deviceType: /mobile|android|iphone|ipad|tablet/i.test(clientInfo.userAgent) ? 'mobile' : 'desktop'
+      }
+    };
+
+    const response = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+    console.log('Apps Script response:', result);
+  } catch (error) {
+    console.error('Error sending to Apps Script:', error);
+  }
 
   // Redirect to appropriate Calendly link
   const calendlyLinks = {
@@ -218,7 +248,9 @@ document.getElementById('bookingForm').addEventListener('submit', async (e) => {
     'entry-strategy-549': 'https://calendly.com/gio_chakhidze/entry-strategy-549'
   };
   
-  window.location.href = calendlyLinks[productValue];
+  setTimeout(() => {
+    window.location.href = calendlyLinks[productValue];
+  }, 500);
 });
 </script>
 
