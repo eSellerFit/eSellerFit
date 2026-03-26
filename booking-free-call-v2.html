@@ -207,9 +207,9 @@ document.getElementById('bookingForm').addEventListener('submit', async (e) => {
 
   localStorage.setItem('esellerfit_free_call_consent', JSON.stringify(consentData));
 
-  // Redirect to Calendly
+  // Redirect to Google Calendar (FIXED: Added https://)
   setTimeout(() => {
-    window.location.href = 'calendar.app.google/x1dHuHqqeXsrnJwaA';
+    window.location.href = 'https://calendar.app.google/x1dHuHqqeXsrnJwaA';
   }, 500);
 });
 </script>
