@@ -59,9 +59,6 @@ window.MARKET_PRESSURE_RENDER = {
       zoneColor = '#c43a2a';
     }
 
-    // Calculate gauge arc endpoint
-    const arcEnd = 30 + (Math.min(result.index, 10) / 10) * 160;
-
     // YOUR EXACT NEW DESIGN
     container.innerHTML = `
       <!-- Header -->
@@ -84,18 +81,18 @@ window.MARKET_PRESSURE_RENDER = {
         </div>
         
         <!-- Gauge/Speedometer Dial -->
-        <svg width="220" height="140" viewBox="0 0 220 140" style="margin: 0 auto 24px; display: block;">
+        <svg width="240" height="150" viewBox="0 0 240 150" style="margin: 0 auto 24px; display: block;">
           <!-- Background arc (gray) -->
-          <path d="M 30 110 A 80 80 0 0 1 190 110" stroke="#e0e0e0" stroke-width="16" fill="none" stroke-linecap="round"/>
+          <path d="M 20 120 A 100 100 0 0 1 220 120" stroke="#e0e0e0" stroke-width="18" fill="none" stroke-linecap="round"/>
           
           <!-- Colored arc (percentage based on score: 0-10 scale) -->
-          <path d="M 30 110 A 80 80 0 0 1 ${arcEnd} 110" stroke="${zoneColor}" stroke-width="16" fill="none" stroke-linecap="round"/>
+          <path d="M 20 120 A 100 100 0 0 1 ${20 + Math.min(result.index, 10) / 10 * 200} 120" stroke="${zoneColor}" stroke-width="18" fill="none" stroke-linecap="round"/>
           
           <!-- Center circle (white background) -->
-          <circle cx="110" cy="110" r="50" fill="white"/>
+          <circle cx="120" cy="120" r="55" fill="white"/>
           
           <!-- Score number -->
-          <text x="110" y="115" text-anchor="middle" font-family="'Playfair Display', serif" font-size="48" font-weight="600" fill="${zoneColor}">
+          <text x="120" y="130" text-anchor="middle" font-family="'Playfair Display', serif" font-size="56" font-weight="600" fill="${zoneColor}">
             ${result.index.toFixed(1)}
           </text>
         </svg>
