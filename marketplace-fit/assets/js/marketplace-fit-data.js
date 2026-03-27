@@ -99,7 +99,7 @@ window.MARKETPLACE_FIT_DATA = {
     // LAYER 3: FINANCIAL FIT (Q9-Q12)
     {
       id: 'Q9',
-      text: 'What is your product's gross margin (revenue minus COGS)?',
+      text: 'What is your product\'s gross margin (revenue minus COGS)?',
       layer: 'ff',
       options: [
         { label: '60%+ — high margin, can absorb fees', value: '2' },
