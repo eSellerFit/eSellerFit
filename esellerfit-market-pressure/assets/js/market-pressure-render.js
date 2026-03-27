@@ -59,8 +59,12 @@ window.MARKET_PRESSURE_RENDER = {
       zoneColor = '#c43a2a';
     }
 
-    // Calculate gauge arc endpoint BEFORE template literal
-    const arcEnd = 20 + Math.min(result.index, 10) / 10 * 200;
+    // Calculate gauge arc - using stroke-dasharray method
+    const safeIndex = Number(result.index) || 0;
+    const normalized = Math.max(0, Math.min(safeIndex, 10)) / 10;
+    const arcLength = Math.PI * 100;
+    const visibleLength = arcLength * normalized;
+    const hiddenLength = arcLength - visibleLength;
 
     // YOUR EXACT NEW DESIGN
     container.innerHTML = `
@@ -83,20 +87,20 @@ window.MARKET_PRESSURE_RENDER = {
           Your Market Pressure
         </div>
         
-        <!-- Gauge/Speedometer Dial -->
+        <!-- Gauge/Speedometer Dial - CORRECT IMPLEMENTATION -->
         <svg width="240" height="150" viewBox="0 0 240 150" style="margin: 0 auto 24px; display: block;">
           <!-- Background arc (gray) -->
-          <path d="M 20 120 A 100 100 0 0 1 220 120" stroke="#e0e0e0" stroke-width="18" fill="none" stroke-linecap="round"/>
+          <path d="M 20 120 A 100 100 0 0 1 220 120" stroke="#e0e0e0" stroke-width="18" fill="none" stroke-linecap="round" pathLength="314"/>
           
-          <!-- Colored arc (percentage based on score: 0-10 scale) -->
-          <path d="M 20 120 A 100 100 0 0 1 ${arcEnd} 120" stroke="${zoneColor}" stroke-width="18" fill="none" stroke-linecap="round"/>
+          <!-- Active arc (colored, using stroke-dasharray) -->
+          <path d="M 20 120 A 100 100 0 0 1 220 120" stroke="${zoneColor}" stroke-width="18" fill="none" stroke-linecap="round" pathLength="314" stroke-dasharray="${visibleLength} ${hiddenLength}"/>
           
           <!-- Center circle (white background) -->
           <circle cx="120" cy="120" r="55" fill="white"/>
           
           <!-- Score number -->
           <text x="120" y="130" text-anchor="middle" font-family="'Playfair Display', serif" font-size="56" font-weight="600" fill="${zoneColor}">
-            ${result.index.toFixed(1)}
+            ${safeIndex.toFixed(1)}
           </text>
         </svg>
         
