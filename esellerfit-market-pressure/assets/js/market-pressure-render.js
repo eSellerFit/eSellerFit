@@ -59,6 +59,9 @@ window.MARKET_PRESSURE_RENDER = {
       zoneColor = '#c43a2a';
     }
 
+    // Calculate gauge arc endpoint BEFORE template literal
+    const arcEnd = 20 + Math.min(result.index, 10) / 10 * 200;
+
     // YOUR EXACT NEW DESIGN
     container.innerHTML = `
       <!-- Header -->
@@ -86,7 +89,7 @@ window.MARKET_PRESSURE_RENDER = {
           <path d="M 20 120 A 100 100 0 0 1 220 120" stroke="#e0e0e0" stroke-width="18" fill="none" stroke-linecap="round"/>
           
           <!-- Colored arc (percentage based on score: 0-10 scale) -->
-          <path d="M 20 120 A 100 100 0 0 1 ${20 + Math.min(result.index, 10) / 10 * 200} 120" stroke="${zoneColor}" stroke-width="18" fill="none" stroke-linecap="round"/>
+          <path d="M 20 120 A 100 100 0 0 1 ${arcEnd} 120" stroke="${zoneColor}" stroke-width="18" fill="none" stroke-linecap="round"/>
           
           <!-- Center circle (white background) -->
           <circle cx="120" cy="120" r="55" fill="white"/>
