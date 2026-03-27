@@ -12,6 +12,30 @@
     gtag('js', new Date());
     gtag('config', 'G-XYYCWXC1RV');
   </script>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+    main.esf-page {
+      flex: 1;
+    }
+    footer {
+      flex-shrink: 0;
+      width: 100%;
+      text-align: center;
+      padding: 24px;
+      background: #ffffff;
+      border-top: 1px solid #d8d0c4;
+      margin-top: 40px;
+      box-sizing: border-box;
+    }
+  </style>
 </head>
 <body>
   <main class="esf-page">
@@ -67,20 +91,20 @@
         <div id="results-container"></div>
       </section>
     </div>
-    <footer style="width: 100%; text-align: center; padding: 24px; background: #ffffff; border-top: 1px solid #d8d0c4; margin-top: 40px;">
-      <div style="font-size: 11px; color: #7a7065; line-height: 1.8;">
-        <a href="/legal/terms.html" target="_blank" style="color: #7a7065; text-decoration: none; margin: 0 12px; display: inline-block;">Terms of Service</a>
-        <span style="color: #d8d0c4;">|</span>
-        <a href="/legal/privacy.html" target="_blank" style="color: #7a7065; text-decoration: none; margin: 0 12px; display: inline-block;">Privacy Policy</a>
-        <span style="color: #d8d0c4;">|</span>
-        <a href="/legal/disclaimer.html" target="_blank" style="color: #7a7065; text-decoration: none; margin: 0 12px; display: inline-block;">Disclaimer</a>
-        <span style="color: #d8d0c4;">|</span>
-        <a href="/legal/client-agreement.html" target="_blank" style="color: #7a7065; text-decoration: none; margin: 0 12px; display: inline-block;">Client Agreement</a>
-        <span style="color: #d8d0c4;">|</span>
-        <a href="/legal/refund-policy.html" target="_blank" style="color: #7a7065; text-decoration: none; margin: 0 12px; display: inline-block;">Refund Policy</a>
-      </div>
-    </footer>
   </main>
+  <footer>
+    <div style="font-size: 11px; color: #7a7065; line-height: 1.8;">
+      <a href="/legal/terms.html" target="_blank" style="color: #7a7065; text-decoration: none; margin: 0 12px; display: inline-block;">Terms of Service</a>
+      <span style="color: #d8d0c4;">|</span>
+      <a href="/legal/privacy.html" target="_blank" style="color: #7a7065; text-decoration: none; margin: 0 12px; display: inline-block;">Privacy Policy</a>
+      <span style="color: #d8d0c4;">|</span>
+      <a href="/legal/disclaimer.html" target="_blank" style="color: #7a7065; text-decoration: none; margin: 0 12px; display: inline-block;">Disclaimer</a>
+      <span style="color: #d8d0c4;">|</span>
+      <a href="/legal/client-agreement.html" target="_blank" style="color: #7a7065; text-decoration: none; margin: 0 12px; display: inline-block;">Client Agreement</a>
+      <span style="color: #d8d0c4;">|</span>
+      <a href="/legal/refund-policy.html" target="_blank" style="color: #7a7065; text-decoration: none; margin: 0 12px; display: inline-block;">Refund Policy</a>
+    </div>
+  </footer>
   <script src="/marketplace-fit/assets/js/config.js"></script>
   <script src="/marketplace-fit/assets/js/calculator-shell.js"></script>
   <script src="/marketplace-fit/assets/js/marketplace-fit-data.js"></script>
@@ -92,7 +116,6 @@
       var clientEmail = '';
       var clientCategory = '';
       
-      // Enable button when all fields are filled and consent is checked
       function updateButtonState() {
         var email = document.getElementById('emailInput').value.trim();
         var category = document.getElementById('categoryInput').value.trim();
@@ -107,7 +130,6 @@
       document.getElementById('categoryInput').addEventListener('input', updateButtonState);
       document.getElementById('consentCheckAll').addEventListener('change', updateButtonState);
       
-      // Start button click
       document.getElementById('startBtn').addEventListener('click', function(e) {
         e.preventDefault();
         clientEmail = document.getElementById('emailInput').value.trim();
@@ -115,7 +137,6 @@
         
         if (!clientEmail || !clientCategory) return;
         
-        // Show assessment screen
         screenIds.forEach(function(id) {
           var el = document.getElementById(id);
           if (el) {
@@ -127,7 +148,6 @@
           }
         });
         
-        // Render questions if ESF_SHELL is available
         if (typeof ESF_SHELL !== 'undefined' && ESF_SHELL.renderQuestions) {
           ESF_SHELL.renderQuestions('questions-container', MARKETPLACE_FIT_DATA.questions, MARKETPLACE_FIT_DATA.answerPrefix);
           ESF_SHELL.bindProgress(MARKETPLACE_FIT_DATA.answerPrefix, MARKETPLACE_FIT_DATA.totalQuestions, 'progressBar', 'progressText');
@@ -143,7 +163,6 @@
         }
       });
       
-      // Submit button click
       document.getElementById('submitBtn').addEventListener('click', async function(e) {
         e.preventDefault();
         var errorEl = document.getElementById('assessmentError');
@@ -162,7 +181,6 @@
         var answers = ESF_SHELL.collectAnswers(MARKETPLACE_FIT_DATA.answerPrefix, MARKETPLACE_FIT_DATA.totalQuestions);
         var result = MARKETPLACE_FIT_ENGINE.calculate(answers, MARKETPLACE_FIT_DATA);
         
-        // Submit lead
         if (ESF_SHELL.submitLead) {
           await ESF_SHELL.submitLead({
             calculator: MARKETPLACE_FIT_DATA.id,
@@ -173,7 +191,6 @@
           });
         }
         
-        // Show results
         screenIds.forEach(function(id) {
           var el = document.getElementById(id);
           if (el) {
